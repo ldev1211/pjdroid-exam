@@ -8,8 +8,8 @@ buildscript {
                         sdk: [
                                 // SDK versions
                                 minSdkVersion    : 19,
-                                targetSdkVersion : 30,
-                                compileSdkVersion: 30
+                                targetSdkVersion : 33,
+                                compileSdkVersion: 33
                         ]
                 ]
         ]
@@ -27,7 +27,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.2'
+        classpath 'com.android.tools.build:gradle:7.3.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         classpath "com.vanniktech:gradle-maven-publish-plugin:$gradle_maven_publish_plugin"

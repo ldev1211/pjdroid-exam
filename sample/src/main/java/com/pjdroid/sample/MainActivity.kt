@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.os.Process
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -264,10 +265,10 @@ class MainActivity : AppCompatActivity(), Handler.Callback, MyAppObserver {
         val etProxy = view.findViewById<View>(R.id.editTextProxy) as EditText
         val etUser = view.findViewById<View>(R.id.editTextUsername) as EditText
         val etPass = view.findViewById<View>(R.id.editTextPassword) as EditText
-        etId.setText(accCfg!!.idUri)
-        etReg.setText(accCfg!!.regConfig.registrarUri)
+
         val proxies = accCfg!!.sipConfig.proxies
         if (proxies.size > 0) etProxy.setText(proxies[0]) else etProxy.setText("")
+
         val creds = accCfg!!.sipConfig.authCreds
         if (creds.size > 0) {
             etUser.setText(creds[0].username)
@@ -276,6 +277,11 @@ class MainActivity : AppCompatActivity(), Handler.Callback, MyAppObserver {
             etUser.setText("")
             etPass.setText("")
         }
+        etId.setText("sip:1995@pbx57.mipbx.vn")
+        etReg.setText("sip:pbx57.mipbx.vn")
+        etProxy.setText("sip:sipproxy01-2020.mipbx.vn:5969")
+        etUser.setText("1995")
+        etPass.setText("f4935275fe3f745c7daff955f0097075")
         adb.setCancelable(false)
         adb.setPositiveButton(
             "OK"
@@ -309,6 +315,7 @@ class MainActivity : AppCompatActivity(), Handler.Callback, MyAppObserver {
             try {
                 account!!.modify(accCfg)
             } catch (e: Exception) {
+                Log.d("TAG", "dlgAccountSetting: $e")
             }
         }
         adb.setNegativeButton(
@@ -326,12 +333,13 @@ class MainActivity : AppCompatActivity(), Handler.Callback, MyAppObserver {
         }
         val item =
             buddyListView!!.getItemAtPosition(buddyListSelectedIdx) as HashMap<String, String>
-        val buddy_uri = item["uri"]
+        val buddy_uri = "sip:${item["uri"]}@pbx57.mipbx.vn"
         val call = MyCall(account, -1)
         val prm = CallOpParam(true)
         try {
             call.makeCall(buddy_uri, prm)
         } catch (e: Exception) {
+            Log.e("TAG", "makeCall: $e")
             call.delete()
             return
         }
@@ -474,6 +482,7 @@ class MainActivity : AppCompatActivity(), Handler.Callback, MyAppObserver {
     override fun notifyChangeNetwork() {
         val m = Message.obtain(handler, MSG_TYPE.CHANGE_NETWORK, null)
         m.sendToTarget()
+
     } /* === end of MyAppObserver ==== */
 
     companion object {
